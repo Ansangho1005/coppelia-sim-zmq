@@ -1,7 +1,6 @@
 import time
 from coppeliasim_zmqremoteapi_client import RemoteAPIClient
 import numpy as np
-import math
 
 class Simulator:
     def __init__(self):
@@ -22,14 +21,24 @@ class Simulator:
         ]
         self.joint_handles = [self.sim.getObject(name) for name in self.joint_names]
 
+        # Barrett Hand finger joints
+        self.finger_joint_names = [
+            '/Franka/BarrettHand/jointA_0',
+            '/Franka/BarrettHand/jointA_2',
+            '/Franka/BarrettHand/jointB_1'
+        ]
+        self.finger_joints = [self.sim.getObject(name) for name in self.finger_joint_names]
+
     def reset_sphere(self):
-        r = np.random.uniform(0.0, 0.6)                  # 반지름 최대 0.6m
-        theta = np.random.uniform(0.0, 2 * math.pi)      # 각도 (0~2pi)
-        drop_x = r * math.cos(theta)
-        drop_y = r * math.sin(theta)
-        drop_z = 30.0                                     # 높이 30m
+        drop_x = np.random.uniform(-0.6, 0.6)
+        drop_y = np.random.uniform(-0.6, 0.6)
+        drop_z = 30.0
         self.sim.setObjectPosition(self.sphere_handle, -1, [drop_x, drop_y, drop_z])
         self.sim.resetDynamicObject(self.sphere_handle)
+
+    def close_gripper(self):
+        for joint in self.finger_joints:
+            self.sim.setJointTargetPosition(joint, 0.5)  # 0.5 ~ 1.0: closer = tighter grip
 
     def run(self):
         self.sim.startSimulation()
@@ -49,6 +58,8 @@ class Simulator:
             print(f"EE position: {ee_pos}")
 
             if abs(error[0]) < 0.05 and abs(error[1]) < 0.05 and sphere_pos[2] < 0.5:
+                print("Ball in range - closing gripper.")
+                self.close_gripper()
                 break
 
             self.sim.step()
