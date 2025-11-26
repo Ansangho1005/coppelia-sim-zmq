@@ -62,9 +62,6 @@ class FrankaCatchEnv(gym.Env):
 
         return obs, reward, terminated, truncated, {}
 
-
-
-
     def _get_obs(self):
         sphere_pos = self.sim.getObjectPosition(self.sphere_handle, -1)
         ee_pos = self.sim.getObjectPosition(self.ee_handle, -1)
