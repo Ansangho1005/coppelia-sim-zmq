@@ -1,6 +1,7 @@
 import time
 from coppeliasim_zmqremoteapi_client import RemoteAPIClient
 import numpy as np
+import math
 
 class Simulator:
     def __init__(self):
@@ -22,11 +23,13 @@ class Simulator:
         self.joint_handles = [self.sim.getObject(name) for name in self.joint_names]
 
     def reset_sphere(self):
-        drop_x = np.random.uniform(-1.0, 1.0)
-        drop_y = np.random.uniform(-1.0, 1.0)
-        drop_z = 30.0
+        r = np.random.uniform(0.0, 0.6)                  # 반지름 최대 0.6m
+        theta = np.random.uniform(0.0, 2 * math.pi)      # 각도 (0~2pi)
+        drop_x = r * math.cos(theta)
+        drop_y = r * math.sin(theta)
+        drop_z = 30.0                                     # 높이 30m
         self.sim.setObjectPosition(self.sphere_handle, -1, [drop_x, drop_y, drop_z])
-        self.sim.setObjectVelocity(self.sphere_handle, [0, 0, 0], [0, 0, 0])
+        self.sim.resetDynamicObject(self.sphere_handle)
 
     def run(self):
         self.sim.startSimulation()
