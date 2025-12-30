@@ -1,5 +1,8 @@
 # CoppeliaSim Franka Ball Catching (ZMQ / Apple Silicon M2)
 
+!! I'm going to commit the data about setting up coppelia-sim !!
+!!coppelia-sim 설정 관련해서는 추후 업데이트 예정!!
+
 [English](#english) | [한국어](#korean)
 
 <a name="english"></a>
