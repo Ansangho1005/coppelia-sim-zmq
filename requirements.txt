@@ -1,0 +1,6 @@
+gymnasium
+numpy
+coppeliasim-zmqremoteapi-client
+stable-baselines3
+torch
+tensorboard

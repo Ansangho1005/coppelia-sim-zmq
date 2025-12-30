@@ -34,7 +34,8 @@ def main():
         policy="MlpPolicy", 
         env=env, 
         verbose=1,
-        tensorboard_log=log_dir # 텐서보드 로그 기록
+        tensorboard_log=log_dir, # 텐서보드 로그 기록
+        device="mps"  # [핵심] Mac M1/M2/M3에서는 'cuda' 대신 'mps'를 씁니다.
     )
     
     # 5. 학습 시작 (여기에 callback을 넣어야 적용됩니다!)
